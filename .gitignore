@@ -3,6 +3,10 @@ data/
 output/
 venv/
 mlruns/
+logs/
+
 
 # 확장자
 *.csv
+*.pyc
+*.logs

@@ -4,11 +4,10 @@ from datetime import datetime
 from math import sqrt
 from typing import Any, Dict
 
-import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import xgboost as xgb
-from sklearn.metrics import mean_absolute_error, mean_squared_error
+from sklearn.metrics import accuracy_score, f1_score
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import RobustScaler
 
@@ -42,6 +41,7 @@ class Model:
             self._h_param = self._config["hyper_parameter"]
         else:
             self._h_param = h_param
+        self._random_state = self._config['random_state']
 
 
     @TryDecorator(logger= model_logger)
@@ -50,26 +50,20 @@ class Model:
             raise Exception("preprocessed data is Empty")
         
         train_set, test_set = train_test_split(
-            self._preprocessed_data, test_size= 0.2, random_state= 42, shuffle= True
+            self._preprocessed_data, test_size= 0.2, random_state= 42, shuffle= True, stratify= self._preprocessed_data['요단백']
         )
 
-        self._train_input = train_set.drop(columns = ['(혈청지오티)ALT'])
-        self._train_target = train_set["(혈청지오티)ALT"]
-        self._test_input = test_set.drop(columns = ['(혈청지오티)ALT'])
-        self._test_target = test_set["(혈청지오티)ALT"]
+        #Under Sampling
+        abnormal = train_set.loc[train_set['요단백'] == 1]
+        normal = train_set.loc[train_set['요단백'] == 0][:len(abnormal)]
+        train_set = pd.concat([normal, abnormal]).sample(frac=1, random_state=self._random_state['random_state'])
 
-        #scaling
-        self._input_scaler = RobustScaler()
-        self._target_scaler = RobustScaler()
-        for col in self._train_input.columns:
-            self._train_input[col] = self._input_scaler.fit_transform(self._train_input[col].values.reshape(-1,1))
-            self._test_input[col] = self._input_scaler.transform(self._test_input[col].values.reshape(-1,1))
+        self._train_input = train_set.drop(columns = ['요단백']).values
+        self._train_target = train_set["요단백"].values
+        self._test_input = test_set.drop(columns = ['요단백']).values
+        self._test_target = test_set["요단백"].values
 
-        self._train_target = self._target_scaler.fit_transform(self._train_target.values.reshape(-1,1))
-        self._test_target = self._target_scaler.transform(self._test_target.values.reshape(-1,1))
 
-        self._train_input = self._train_input.values
-        self._test_input = self._test_input.values
 
         model_logger.info("Model Data Count-------------------------------------")
         model_logger.info(
@@ -80,7 +74,7 @@ class Model:
         model_logger.info("-----------------------------------------------------")
 
     def _build_model(self) -> None:
-        self._model = xgb.XGBRegressor(
+        self._model = xgb.XGBClassifier(
         n_estimators = 200,
         reg_alpha = 0,
         reg_lambda = 1,
@@ -96,18 +90,16 @@ class Model:
         self._model.fit(self._train_input, self._train_target)
 
     def evaluate_model(self) -> dict:
-        actual = self._target_scaler.inverse_transform(self._test_target.reshape(-1,1))
-        predict = self._target_scaler.inverse_transform(self._model.predict(self._test_input).reshape(-1,1))
-        actual_train = self._target_scaler.inverse_transform(self._train_target.reshape(-1,1))
-        predict_train = self._target_scaler.inverse_transform(self._model.predict(self._train_input).reshape(-1,1))
+        actual = self._test_target
+        predict = self._model.predict(self._test_input)
+        actual_train = self._train_target.reshape(-1,1)
+        predict_train = self._model.predict(self._train_input)
 
         eval_metric = {
-            'Train MSE': mean_squared_error(actual_train, predict_train),
-            'Train RMSE': sqrt(mean_squared_error(actual_train, predict_train)),
-            'Train MAE': mean_absolute_error(actual_train, predict_train),
-            'MSE': mean_squared_error(actual, predict),
-            'RMSE': sqrt(mean_squared_error(actual, predict)),
-            'MAE': mean_absolute_error(actual, predict)
+            'Train Accuracy': accuracy_score(actual_train, predict_train),
+            'Train F1 score': f1_score(actual_train, predict_train),
+            'Accuracy': accuracy_score(actual, predict),
+            'F1 score': f1_score(actual, predict),
         }
 
         return eval_metric

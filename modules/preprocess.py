@@ -61,16 +61,22 @@ class Preprocess:
         self._raw_data = self._raw_data.reset_index(drop = True)
 
     def preprocess(self) -> None:
-        self._raw_data = self._raw_data[[
-            '연령대 코드(5세단위)', '신장(5Cm단위)',
-            '허리둘레', '시력(우)', '식전혈당(공복혈당)', 
-            'HDL 콜레스테롤', 'LDL 콜레스테롤',
-            '혈색소', '(혈청지오티)AST', '(혈청지오티)ALT', 
-            '감마 지티피', '흡연상태',
-            '음주여부', '치석'
-            ]]
+
+        # 변수 선택
+        self._raw_data = self._raw_data[['성별코드', '신장(5Cm단위)',
+       '체중(5Kg 단위)', '허리둘레', '시력(우)', '청력(좌)', '청력(우)', '수축기 혈압',
+       '이완기 혈압', '식전혈당(공복혈당)', '총 콜레스테롤', '트리글리세라이드', 'HDL 콜레스테롤', 'LDL 콜레스테롤',
+       '혈색소', '요단백', '혈청크레아티닌', '(혈청지오티)AST', '(혈청지오티)ALT', '감마 지티피', '흡연상태',
+       '음주여부']]
+
+        # 분류 라벨
+        self._raw_data.loc[(self._raw_data['요단백'] == 1),'요단백'] = 0
+        self._raw_data.loc[(self._raw_data['요단백'] != 0),'요단백'] = 1
+
+        # 이상치, 결측치 처리
         self._raw_data.dropna(inplace = True)
         self.drop_anomalies()
+
         self._preprocessed_data = self._raw_data
         preprocess_logger.info("Model Data Count-------------------------------------")
         preprocess_logger.info("raw dataset        : " + str(len(self._raw_data)))
