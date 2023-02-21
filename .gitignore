@@ -1,0 +1,8 @@
+# 폴더
+data/
+output/
+venv/
+mlruns/
+
+# 확장자
+*.csv

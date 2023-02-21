@@ -1,0 +1,17 @@
+[INFO:main:2023/02/21 11:08:29] Program Start
+[INFO:main:2023/02/21 11:08:29] {'log': {'path': 'logs/'}, 'path': {'data': 'data/', 'output': 'output/'}, 'model': {'batch_size': 'None', 'epochs': 1}, 'hyper_parameter': {'n_estimators': 200, 'reg_alpha': 0, 'reg_lambda': 1, 'booster': "'gbtree'", 'learning_rate': 0.03, 'gamma': 0.1, 'subsample': 0.4, 'colsample_bytree': 1, 'max_depth': 7}}
+[INFO:Preprocess:2023/02/21 11:08:32] Model Data Count-------------------------------------
+[INFO:Preprocess:2023/02/21 11:08:32] raw dataset        : 129057
+[INFO:Preprocess:2023/02/21 11:08:32] preprocessed dataset  : 129057
+[INFO:Preprocess:2023/02/21 11:08:32] -----------------------------------------------------
+[INFO:model:2023/02/21 11:08:32] Model Data Count-------------------------------------
+[INFO:model:2023/02/21 11:08:32] preprocessed dataset  : 129057
+[INFO:model:2023/02/21 11:08:32] train dataset      : 103245
+[INFO:model:2023/02/21 11:08:32] test dataset       : 25812
+[INFO:model:2023/02/21 11:08:32] -----------------------------------------------------
+[INFO:model:2023/02/21 11:08:43] Model Data Count-------------------------------------
+[INFO:model:2023/02/21 11:08:43] preprocessed dataset  : 129057
+[INFO:model:2023/02/21 11:08:43] train dataset      : 103245
+[INFO:model:2023/02/21 11:08:43] test dataset       : 25812
+[INFO:model:2023/02/21 11:08:43] -----------------------------------------------------
+[INFO:main:2023/02/21 11:08:52] result: {'Train MSE': 84.86692498475259, 'Train RMSE': 9.212324624368845, 'Train MAE': 5.680577675511205, 'MSE': 148.9310211363122, 'RMSE': 12.203729804298037, 'MAE': 6.043859649883136}
