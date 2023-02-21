@@ -12,6 +12,14 @@ from modules.utils.decorator import TryDecorator
 preprocess_logger = logging.getLogger("Preprocess")
 
 class Preprocess:
+    """ Preprocess class
+    
+    Attributes:
+        _raw_data (pd.DataFrame): raw data를 저장
+        _preprocessed_data (pd.DataFrame): 전처리된 데이터를 저장
+
+    """
+
 
     _raw_data : pd.DataFrame
     _preprocessed_data: pd.DataFrame

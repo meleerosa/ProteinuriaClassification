@@ -7,12 +7,26 @@ from modules.utils.logging_format import CustomFormatter
 
 
 class DefaultLogger:
+    """DefaultLogger class
+
+    Attributes:
+
+    """
     def __init__(self) -> None:
         pass
 
     def setDefaultLogger(
         self, logger_name: str, output_directory_path: str
     ) -> logging.Logger:
+        """ 로거 설정함수
+            어떤 로그를 어디에, 어떻게 기록할 지 설정
+
+        Args:
+            logger_name (str): 기록할 log의 이름
+            output_directory_path (str): 출력값을 저장할 디렉토리 경로
+        Returns:
+            logging.getLogger(logger_name): 특정 이름의 로거 객체 반환
+        """
         # 로거 설정
         log_file_name = os.path.join(
             output_directory_path,
@@ -35,6 +49,14 @@ class DefaultLogger:
         return logging.getLogger(logger_name)
 
     def rename_log_file(self):
+        """ 로그 이름 변경함수
+
+        Args:
+            None
+        Returns:
+            None
+        """
+
         logging.shutdown()
         c_time = os.path.getctime(
             os.path.join(

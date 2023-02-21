@@ -9,6 +9,14 @@ MLFLOW_URI = os.getenv("DAS_MLFLOW_URI")
 
 
 class DasMlflow:
+    """DasMlflow class
+        모델의 정보와 결과를 각 실험 별로 이름을 지정해 저장
+
+    Attributes:
+        self._model (type): mlflow를 통해 파라미터, 결과 등을 기록할 모델
+
+    """
+
     def __init__(self, exp_name: str, model: Model) -> None:
         self._model = model
         mlflow.set_tracking_uri(MLFLOW_URI)

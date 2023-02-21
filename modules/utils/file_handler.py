@@ -31,6 +31,17 @@ def get_file_list(
     files_only: bool = True,
     inc_subdir: bool = False,
 ) -> Dict:
+    """파일이 숨김파일인지 확인, 숨김 파일이면 True, 아니면 False 리턴
+
+    Args:
+        directory_path (str): 디렉토리 경로
+        hidden_file (bool): 숨김 파일 표시 여부
+        files_only (bool): 파일만 표시 여부
+        inc_subdir (bool): 하위 폴더 탐색 여부
+
+    Returns:
+        _type_: 파일과 각 파일의 경로
+    """
     def is_file(file_path: str):
         if files_only:
             return os.path.isfile(file_path)
@@ -80,11 +91,33 @@ def get_file_list(
 
 
 def chk_and_make_dir(directory_path: str) -> None:
+    """디렉토리 경로가 있는지 확인하고 없으면 경로를 생성하는 함수
+
+    Args:
+        directory_path (str): 디렉토리 경로
+
+    Returns:
+        None
+    """
     if not os.path.exists(directory_path):
         os.makedirs(directory_path)
 
 
 def get_last_path(dir: str, type: str = "dir", by: str = "name") -> str:
+    """마지막으로 수정, 생성, 접근한 파일명과 경로를 반환하는 함수
+        mtime: 파일 최종 수정일
+        ctime: 파일 생성일
+        atime: 파일 최근 접근일
+        name: 파일 이름
+
+    Args:
+        dir (str): 디렉토리 경로
+        type (str): 검색할 파일의 종류
+        by (str): 검색 기준
+
+    Returns:
+        str: 
+    """
     if type == "dir":
         dir_list_class = list(filter(os.path.isdir, glob.glob(dir + "/*")))
     elif type == "file":

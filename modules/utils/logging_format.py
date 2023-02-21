@@ -2,7 +2,13 @@ import logging
 
 
 class CustomFormatter(logging.Formatter):
+    """CustomFormatter class
+    logging Formatter를 상속받아 customize한 클래스
+    상태에 따라 log를 기록할 방식 설정(글자색, 형식)
 
+    Attributes:
+        None
+    """
     __grey = "\x1b[38;21m"
     __yellow = "\x1b[33;21m"
     __green = "\x1b[32m"
@@ -26,8 +32,14 @@ class CustomFormatter(logging.Formatter):
     }
 
     def format(self, record) -> str:
-    
+        """log format에 따라 log 기록
 
+        Args:
+            record (str): log에 기록할 record
+
+        Returns:
+            str : 설정한 format에 맞춘 record
+        """
         log_fmt = self.__FORMATS.get(record.levelno)
 
         formatter = logging.Formatter(

@@ -10,6 +10,7 @@ class Config(Singletone):
 
     Attributes:
         self.__config (dict): config.ini 파일을 불러와 dict 형식으로 저장
+        self.__config (dict): config.ini 파일을 불러와 dict 형식으로 저장
     """
 
     @property
@@ -18,7 +19,7 @@ class Config(Singletone):
 
     def __init__(self, config_file_path: str) -> None:
         self.__configparser = configparser.ConfigParser()
-        self.__configparser.read(config_file_path, encoding='utf-8')
+        self.__configparser.read(config_file_path)
         self.__config = dict()
         self._str_to_list()
 
@@ -41,8 +42,7 @@ class Config(Singletone):
                 if (self.__configparser[section][key][0] == "[") and (
                     self.__configparser[section][key][-1] == "]"
                 ):
-                    f = open(self.__configparser[section][key], encoding= 'utf-8')
-                    list_value = json.loads(f.read())
+                    list_value = json.loads(self.__configparser[section][key])
                     for item in list_value:
                         item = str_to_number(item)
                     self.__config[section][key] = list_value
